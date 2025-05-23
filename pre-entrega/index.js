@@ -1,7 +1,8 @@
 
 //Asocio la url de la api a una variable para hacer el metodo fetch reutilizable
 const url = 'https://fakestoreapi.com/products'
-const args = process.argv.slice(2);
+const args = process.argv.slice(4);
+const metodo = `${process.argv[2]?.toUpperCase()} ${process.argv[3]?.toUpperCase()}`;
 
 const configPost = (title, price, category) => ({
   method: 'POST',
@@ -88,22 +89,22 @@ async function getInfo (url, config ={}) {
 
  }
 
-switch (args[0]?.toUpperCase()) {
-    case "GET":
+switch (metodo) {
+    case "GET PRODUCTS":
         getProductos()
         break;
-    case "POST":
+    case "POST PRODUCTS":
         postProdctos()
         break;
-    case "DELETE":
+    case "DELETE PRODUCTS":
         deleteProductos()
             break;
         default:
             console.log("Hola has ingresado a mi app para consumir una API");
             console.log("Los metodos disponibles son: GET, POST, DELETE");
-            console.log("Ejemplo de uso GET: npm run get")
-            console.log("Ejemplo de uso GET by ID: npm run get [id]");
-            console.log("Ejemplo de uso POST: npm run post [title][price][category]");
-            console.log("Ejemplo de uso DELETE: npm run delete [id]");
+            console.log("Ejemplo de uso GET: npm run get products")
+            console.log("Ejemplo de uso GET by ID: npm run get products [id]");
+            console.log("Ejemplo de uso POST: npm run post products [title][price][category]");
+            console.log("Ejemplo de uso DELETE: npm run delete products [id]");
             break;
     }

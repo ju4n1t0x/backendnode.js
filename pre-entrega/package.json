@@ -6,9 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "get" : "node index.js GET",
-    "post" : "node index.js POST",
-    "delete" : "node index.js DELETE"
+    "get" : "node index.js GET products",
+    "post" : "node index.js POST products",
+    "delete" : "node index.js DELETE products"
   },
   "keywords": [],
   "author": "",

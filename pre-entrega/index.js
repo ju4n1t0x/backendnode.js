@@ -1,8 +1,23 @@
 
-//Asocio la url de la api a una variable para hacer el metodo fetch reutilizable
+//Juan Igancio Sasia - Pre-entrega
+
+// //Asocio la url de la api a una variable para hacer el metodo fetch reutilizable
 const url = 'https://fakestoreapi.com/products'
+//Creo el arrego args para almacenar los argumentos que se pasan al script 
+//teniendo en cuenta que el primer argumento es el path del script y el segundo es el nombre del script
+//por lo que los argumentos que me interesan son a partir del tercer argumento
 const args = process.argv.slice(4);
-const metodo = `${process.argv[2]?.toUpperCase()} ${process.argv[3]?.toUpperCase()}`;
+//Creo una variable metodo que almacena el primer y segundo argumento pasados al script
+//en mayusculas para poder hacer la comparacion con el switch
+const args2 = `${process.argv[2]?.toUpperCase()} ${process.argv[3]?.toUpperCase()}`;
+
+//Creo la configuracion para los metodos GET, POST y DELETE y los asingno a una constante para poder reutilizarlos
+const configGET = {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json'
+  }
+}
 
 const configPost = (title, price, category) => ({
   method: 'POST',
@@ -16,14 +31,6 @@ const configPost = (title, price, category) => ({
   })
 })
 
-
-const configGET = {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-}
-
 const configDELETE = {
   method: 'DELETE',
   headers: {
@@ -33,7 +40,7 @@ const configDELETE = {
 
 
 //Llamo a la api y guardo la respuesta en la variable DATA
-async function getInfo (url, config ={}) {
+async function getInfo (url, config = configGET) {
   try {
     const response = await fetch(url, config)
     const data = await response.json()
@@ -43,9 +50,10 @@ async function getInfo (url, config ={}) {
   }
 }
 
+//Declaro la funcion getInfo para hacer las peticiones a la api, ya sea la info completa o por id
  function getProductos(){
   if(args[1]){
-          getInfo(`${url}/${args[1]}`, configGET)
+          getInfo(`${url}/${args[1]}`, configGET) //Asocio el id del producto que viene como arg en consola a la url
           .then((data) => console.log("El producto es: ", data))
         }else{
           getInfo(url, configGET)
@@ -53,7 +61,9 @@ async function getInfo (url, config ={}) {
         }
 
  }
- function postProdctos(){
+
+ //Declaro la funcion para postear un producto ingresado por consola a la api
+ function postProductos(){
     if(args[1] && args[2] && args[3]){
       const title = args[1]
       const price = parseFloat(args[2])
@@ -61,11 +71,6 @@ async function getInfo (url, config ={}) {
           getInfo(url, configPost(title, price, category))
           .then((data) => {
             console.log("El producto creado es: ", data)
-            return getInfo(url, configGET)
-          })
-          .then((totalProductos) => {
-            console.log("La lista de actualizada es: ")
-            console.log(totalProductos)
           })
           //Etiiendo que la api no muestra el producto creado, pero si lo ves el que  yo envio
           //lo genera conn el id 21 sin que yo lo especifique y en la lista completa muestra 
@@ -76,25 +81,28 @@ async function getInfo (url, config ={}) {
         }
  }
 
+
+ //Declaro la funcion para eliminar un producto de la ip por id, ingresado por consola
  function deleteProductos(){
   const id = args[1]
         if(!id){
           console.log("Indica el id del producto a eliminar")
           return;
         }
-        getInfo(`${url}/${args[1]}`, configDELETE)
+        getInfo(`${url}/${args[1]}`, configDELETE) //Asocio el id del producto que viene como arg en consola a la url
         .then((data) => {
             console.log("El producto eliminado es: ", data)
           })
+        }
+          
 
- }
-
-switch (metodo) {
+  //Creo un switch para manejar las diferentes opciones dentro de la appi y como default paso el instructivo de uso
+switch (args2) {
     case "GET PRODUCTS":
         getProductos()
         break;
     case "POST PRODUCTS":
-        postProdctos()
+        postProductos()
         break;
     case "DELETE PRODUCTS":
         deleteProductos()
@@ -108,3 +116,4 @@ switch (metodo) {
             console.log("Ejemplo de uso DELETE: npm run delete products [id]");
             break;
     }
+ 
